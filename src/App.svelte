@@ -18,11 +18,24 @@
 
 
 <script>
+  import { onMount, onDestroy } from 'svelte';
+  import { patTest, patSave, getPat, treeBySpace, resolveRoot, selection, evaluate, pull, build, activate, getStatus } from './aspice/confluenceApi.js';
+
   import svelteLogo from './assets/svelte.svg'
   import viteLogo from '/vite.svg'
   import Counter from './lib/Counter.svelte'
   import About   from './lib/About.svelte'
+  import { clientLog } from './lib/utils/clientLog.js';
+
   let page = 'home'; // 'home' или 'about'
+
+  onMount(async () => {
+    clientLog('Component was mounted', {});
+  });
+
+  onDestroy(() => {
+    clientLog('Component was destroyed', {});
+  });
 </script>
 
 <nav class="d-flex gap-2 p-5">
