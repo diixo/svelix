@@ -2,11 +2,11 @@
 
 **Svelix** - start example project, based on `svelte.js` framework.
 
-
-Create project:
+Install all dependencies:
 ``` bash
-npm create vite@latest . -- --template svelte
+nmp install
 ```
+
 
 Fix policy to unblock scripts execution:
 ``` bash
@@ -14,9 +14,9 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 
-### Rebuild dist
+Create project:
 ``` bash
-npm run build
+npm create vite@latest . -- --template svelte
 ```
 
 
@@ -27,6 +27,12 @@ npm run dev
 
 
 ### Run without Node.js
+
+Rebuild dist:
+``` bash
+npm run build
+```
+
 ``` bash
 cd dist
 python -m http.server 8000
