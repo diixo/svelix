@@ -8,7 +8,7 @@ Create project:
 npm create vite@latest . -- --template svelte
 ```
 
-Fix policy:
+Fix policy to unblock scripts execution:
 ``` bash
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
