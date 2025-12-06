@@ -25,13 +25,13 @@
   let page = 'home'; // 'home' или 'about'
 </script>
 
-<nav>
-  <button on:click={() => page = 'home'}>Main</button>
-  <button on:click={() => page = 'about'}>About-section</button>
+<nav class="d-flex gap-2 p-5">
+  <button class="btn btn-light" on:click={() => page = 'home'}>Main</button>
+  <button class="btn btn-light" on:click={() => page = 'about'}>About-section</button>
 </nav>
 
 
-<main>
+<main class="px-5">
 {#if page === 'home'}
   <Counter />
 {:else if page === 'about'}
