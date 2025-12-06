@@ -20,6 +20,7 @@
 <script>
   import { onMount, onDestroy } from 'svelte';
   import { patTest, patSave, getPat, treeBySpace, resolveRoot, selection, evaluate, pull, build, activate, getStatus } from './aspice/confluenceApi.js';
+  import ApisTreePickerModal from './aspice/ApisTreePickerModal.svelte';
 
   import svelteLogo from './assets/svelte.svg'
   import viteLogo from '/vite.svg'
@@ -224,12 +225,12 @@
       // Load saved selection so counts persist across sessions
       await loadSavedSelection();
 
-      // try {
-      //   // E2E helpers
-      //   window.__openConfluencePicker = async () => {
-      //     await pickerRef?.show();
-      //   };
-      // } catch {}
+      try {
+        // E2E helpers
+        window.__openConfluencePicker = async () => {
+          await pickerRef?.show();
+        };
+      } catch {}
     })();
   });
 
@@ -241,8 +242,13 @@
 <nav class="d-flex gap-2 p-5">
   <button class="btn btn-light" on:click={() => page = 'home'}>Main</button>
   <button class="btn btn-light" on:click={() => page = 'about'}>About-section</button>
+  <button class="btn btn-primary" data-testid="choose-pages-btn" on:click={openTree} disabled={!space}>Choose Pages…</button>
 </nav>
 
+<ApisTreePickerModal bind:this={pickerRef} {space} initialSelected={Array.from(selectedIds)} on:save={(e) => {
+  selectedIds = new Set(e.detail.selected || []);
+  saveSelection();
+  }} />
 
 <main class="px-5">
 {#if page === 'home'}
@@ -269,4 +275,5 @@
     Click on the Vite and Svelte logos to learn more
   </p>
 </main>
+
 
