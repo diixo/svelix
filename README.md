@@ -1,5 +1,7 @@
 # svelix
 
+**Svelix** - start example project, based on `svelte.js` framework.
+
 
 Create project:
 ``` bash
@@ -11,7 +13,14 @@ Fix policy:
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
-### rebuild dist
+### Rebuild dist
 ``` bash
 npm run build
+```
+
+### Run without Node.js
+``` bash
+cd dist
+python -m http.server 8000
+http://localhost:8000
 ```
