@@ -13,10 +13,18 @@ Fix policy to unblock scripts execution:
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
+
 ### Rebuild dist
 ``` bash
 npm run build
 ```
+
+
+### Run with Node.js (live-reload) for development-mode:
+``` bash
+npm run dev
+```
+
 
 ### Run without Node.js
 ``` bash
