@@ -1,19 +1,21 @@
+
 <style>
-  .logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-    transition: filter 300ms;
+  .tree-node { cursor: pointer; user-select: none; }
+  .node-children {
+    margin-left: 1.5rem;
+    list-style: none;
+    padding-left: 0;
   }
-  .logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
+  .collapse-icon {
+    width: 1.125rem;
+    display:inline-block;
+    text-align:center;
+    cursor:pointer;
   }
-  .logo.svelte:hover {
-    filter: drop-shadow(0 0 2em #ff3e00aa);
-  }
-  .read-the-docs {
-    color: #888;
-  }
+  .node-label { margin-left: .25rem; }
+  .selected-count { min-width: 6rem; }
+  .search-highlight { background: rgb(255, 144, 64); }
+  .tree-node-item { margin-bottom: 0.25rem; }
 </style>
 
 
@@ -108,7 +110,7 @@
       .map((s) => s.trim())
       .filter(Boolean);
     // Extend body to include filters; backend ignores unknown fields safely
-    await fetch('/confluence/selection', {
+    await fetch('http://127.0.0.1:8001/confluence/selection', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ space, include_ids: arr, exclude_ids: [], stop_labels }),
@@ -257,23 +259,10 @@
   <About />
 {/if}
 
-  <div>
-    <a href="https://vite.dev" target="_blank" rel="noreferrer">
-      <img src={viteLogo} class="logo" alt="Vite Logo" />
-    </a>
-    <a href="https://svelte.dev" target="_blank" rel="noreferrer">
-      <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
-    </a>
+
+  <div class="mt-3 flex items-center gap-3">
+    <div class="text-sm opacity-80">Stage: <b>{stage}</b>{#if phase}&nbsp;<span class="opacity-60">({phase})</span>{/if} · Pages: {plan.pages || 0} Added: {(delta.added || []).length} Changed: {(delta.changed || []).length} Deleted: {(delta.deleted || []).length}</div>
   </div>
-  <h1>Vite + Svelte</h1>
-
-  <p>
-    Check out <a href="https://github.com/sveltejs/kit#readme" target="_blank" rel="noreferrer">SvelteKit</a>, the official Svelte app framework powered by Vite!
-  </p>
-
-  <p class="read-the-docs">
-    Click on the Vite and Svelte logos to learn more
-  </p>
 </main>
 
 
