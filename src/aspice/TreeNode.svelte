@@ -1,72 +1,82 @@
+<style>
+  .tree-node { cursor: pointer; user-select: none; }
+  .node-children { margin-left: 1.5rem; list-style: none; padding-left: 0; }
+  .collapse-icon { width: 1.125rem; display:inline-block; text-align:center; cursor:pointer; }
+  .node-label { margin-left: .25rem; }
+  .tree-node-item { margin-bottom: 0.25rem; }
+  .d-none { display: none; }
+</style>
+
+
 <script>
   export let id;
-  export let depth = 0;
-  export let node;
-  export let toggleNode;
-  export let setFocus = () => {};
-  export let expandNode;
+  export let node = { title: id, children: [] };
+  export let nodes; // объект или Map с доступом nodes[id]
+  export let getNode = (nid) => nodes[nid] || { title: nid, children: [] };
 
-  // Для загрузки дочерних:
-  export let getNode;
+  // колбэки от родителя:
+  export let onExpand = (id) => {};
+  export let onToggle = (id) => {};
 
-  const hasChildren = node?.children?.length > 0;
+  // Состояние открытия (как ul.classList.remove/add)
+  let expanded = false;
+
+  const hasChildren = Array.isArray(node.children) && node.children.length > 0;
+
+  function toggleExpand(event) {
+    event.stopPropagation();
+
+    if (!hasChildren) return;
+
+    expanded = !expanded;
+
+    // логика смены иконки и d-none такая же как в JS
+  }
 </script>
 
-{#if node}
-<li class="tree-node-item" style="padding-left: {depth * 1}rem">
-  
-  <div class="d-flex align-items-start gap-2">
-
-    <!-- Иконка раскрытия -->
+<li class="tree-node-item">
+  <!-- Абсолютно тот же контейнер -->
+  <div>
+    <!-- collapseIcon -->
     <span
       class="collapse-icon"
-      role="button"
-      on:click={(e) => { 
-        e.stopPropagation(); 
-        expandNode(id); 
-      }}>
-      {#if hasChildren}
-        {node.expanded ? '▾' : '▸'}
-      {/if}
+      on:click={toggleExpand}
+    >
+      {hasChildren ? (expanded ? '▾' : '▸') : ''}
     </span>
 
-    <!-- Чекбокс -->
+    <!-- checkbox -->
     <input
       type="checkbox"
-      class="form-check-input mt-1"
+      id={"cb-" + id}
+      class="form-check-input"
+      data-node-id={id}
       checked={node.checked}
-      indeterminate={node.indeterminate}
-      on:change={() => toggleNode(id)}
+      on:change={() => onToggle(id)}
     />
 
-    <!-- Текст -->
-    <label class="node-label select-text">
-      {node.title}
-      {#if node.required}
-        <span class="opacity-75">(required)</span>
-      {/if}
+    <!-- label -->
+    <label
+      class="node-label"
+      for={"cb-" + id}
+      data-node-id={id}
+    >
+      {node.title || id}
     </label>
   </div>
 
-  <!-- Дочерние -->
   {#if hasChildren}
-    <ul class={node.expanded ? "" : "d-none"} id={"children-" + id}>
+    <ul class={`node-children ${expanded ? '' : 'd-none'}`} id={"children-" + id} >
       {#each node.children as childId}
-        <svelte:self 
+        <svelte:self
           id={childId}
-          depth={depth + 1}
           node={getNode(childId)}
-          {expandNode}
-          {toggleNode}
+          nodes={nodes}
           {getNode}
+          onToggle={onToggle}
+          onExpand={onExpand}
         />
       {/each}
     </ul>
   {/if}
-
 </li>
-{/if}
-
-<style>
-  .installer-row:focus { outline: 2px solid hsl(var(--p)); outline-offset: 1px; }
-</style>

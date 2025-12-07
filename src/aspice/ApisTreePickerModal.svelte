@@ -1,3 +1,7 @@
+<style>
+  .node-children { margin-left: 1.5rem; list-style: none; padding-left: 0; }
+</style>
+
 <script>
 
   import { createEventDispatcher } from 'svelte';
@@ -314,24 +318,25 @@
         {/if}
 
         <!-- TREE AREA -->
-        <div class="border p-2 bg-light" style="max-height: 40vh; overflow-y: auto;" role="tree" aria-multiselectable="true">
-
+        <div class="border rounded-3 pb-3 pt-4 bg-light" style="max-height: 60vh; overflow-y: auto;" role="tree" aria-multiselectable="true">
+          <div id="treeRoot">
+            <ul class="node-children">
           {#if rootChildren.length}
             {#each rootChildren as cid}
               <TreeNode
                 id={cid}
-                depth={0}
                 node={nodes.get(cid)}
-                expandNode={expandNode}
-                toggleNode={toggleNode}
-                getNode={(i)=>nodes.get(i)}
-                {setFocus}
+                nodes={nodes}
+                getNode={(i) => nodes.get(i)}
+                onToggle={toggleNode}
+                onExpand={expandNode}
               />
             {/each}
           {:else}
             <div class="small text-muted">No children under space home.</div>
           {/if}
-
+            </ul>
+          </div>
         </div>
 
         <!-- DESCRIPTION AREA -->
@@ -351,7 +356,9 @@
 
       </div>
 
+      <!--
       <div class="modal-body">Tree Modal</div>
+      -->
       <div class="modal-footer">
         <button class="btn btn-primary" on:click={onSave}>Save</button>
         <button class="btn btn-secondary" on:click={closeModal}>Cancel</button>
