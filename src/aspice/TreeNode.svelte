@@ -1,31 +1,70 @@
 <script>
   export let id;
   export let depth = 0;
-  // Current node is passed as a prop to ensure reactivity when parent map updates
   export let node;
-  export let expandNode;
   export let toggleNode;
-  export let getNode; // helper to fetch child node objects by id
   export let setFocus = () => {};
+  export let expandNode;
+
+  // Для загрузки дочерних:
+  export let getNode;
+
+  const hasChildren = node?.children?.length > 0;
 </script>
 
 {#if node}
-  <div class="flex items-start gap-2 py-1 installer-row" style={`padding-left: ${Math.min(depth*1.0, 2)}rem`} role="treeitem" aria-expanded={node.expanded} aria-selected={!!node.checked} tabindex="0" on:mouseenter={() => setFocus(id)} on:focus={() => setFocus(id)} data-id={id} data-title={node.title}>
-    <button class="btn btn-xs rounded-none" on:click={() => expandNode(id)} disabled={node.loading} title={node.expanded ? 'Collapse' : 'Expand'}>
-      {#if node.loading}
-        …
-      {:else}
-        {node.expanded ? '−' : '+'}
+<li class="tree-node-item" style="padding-left: {depth * 1}rem">
+  
+  <div class="d-flex align-items-start gap-2">
+
+    <!-- Иконка раскрытия -->
+    <span
+      class="collapse-icon"
+      role="button"
+      on:click={(e) => { 
+        e.stopPropagation(); 
+        expandNode(id); 
+      }}>
+      {#if hasChildren}
+        {node.expanded ? '▾' : '▸'}
       {/if}
-    </button>
-    <input type="checkbox" class="checkbox checkbox-xs mt-1 accent-green-600" checked={node.checked} indeterminate={node.indeterminate} on:change={() => toggleNode(id)}>
-    <div class="text-sm leading-tight select-text">{node.title}{#if node.required}<span class="opacity-70"> (required)</span>{/if}</div>
+    </span>
+
+    <!-- Чекбокс -->
+    <input
+      type="checkbox"
+      class="form-check-input mt-1"
+      checked={node.checked}
+      indeterminate={node.indeterminate}
+      on:change={() => toggleNode(id)}
+    />
+
+    <!-- Текст -->
+    <label class="node-label select-text">
+      {node.title}
+      {#if node.required}
+        <span class="opacity-75">(required)</span>
+      {/if}
+    </label>
   </div>
-  {#if node.expanded}
-    {#each (node.children || []) as childId}
-      <svelte:self id={childId} depth={depth + 1} node={getNode(childId)} {expandNode} {toggleNode} {getNode} {setFocus} />
-    {/each}
+
+  <!-- Дочерние -->
+  {#if hasChildren}
+    <ul class={node.expanded ? "" : "d-none"} id={"children-" + id}>
+      {#each node.children as childId}
+        <svelte:self 
+          id={childId}
+          depth={depth + 1}
+          node={getNode(childId)}
+          {expandNode}
+          {toggleNode}
+          {getNode}
+        />
+      {/each}
+    </ul>
   {/if}
+
+</li>
 {/if}
 
 <style>

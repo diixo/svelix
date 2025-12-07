@@ -314,7 +314,6 @@
         {/if}
 
         <!-- TREE AREA -->
-        <!--
         <div class="border p-2 bg-light" style="max-height: 40vh; overflow-y: auto;" role="tree" aria-multiselectable="true">
 
           {#if rootChildren.length}
@@ -334,7 +333,6 @@
           {/if}
 
         </div>
-        -->
 
         <!-- DESCRIPTION AREA -->
         <div class="border p-2 bg-light mt-3" style="min-height: 6rem;">
