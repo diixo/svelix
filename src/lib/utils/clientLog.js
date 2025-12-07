@@ -1,6 +1,6 @@
 export async function clientLog(tag, payload = {}) {
   try {
-    const body = { ...payload, ts: Date.now() / 1000 };
+    const body = { ...payload, ts: new Date().toLocaleString() };
     // Mirror to console for local triage
     // eslint-disable-next-line no-console
     console.log('[client-log]', tag, body);
