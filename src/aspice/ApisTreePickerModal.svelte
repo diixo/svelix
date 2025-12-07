@@ -148,7 +148,17 @@
       for (const c of children) {
         const id = String(c.id);
         const isReq = (requiredIds || []).includes(id);
-        nodes.set(id, { id, title: c.title || id, expanded: false, loading: false, loaded: false, checked: selectedSet.has(id), indeterminate: false, required: isReq, children: [] });
+        nodes.set(id, {
+          id,
+          title: c.title || id,
+          expanded: false,
+          loading: false,
+          loaded: false,
+          checked: selectedSet.has(id),
+          indeterminate: false,
+          required: isReq,
+          children: []
+        });
         parentMap.set(id, rootId || '__root__');
       }
       nodes = new Map(nodes);
@@ -256,7 +266,14 @@
     const n = nodes.get(id);
     if (!n) return;
     const before = countTreeItems();
-    if (n.required) { n.checked = true; n.indeterminate = false; nodes.set(id, { ...n }); nodes = new Map(nodes); clientLog('apis_panel_picker', { action: 'toggle_node', id, checked: n.checked, before, after: countTreeItems() }); return; }
+    if (n.required) {
+      n.checked = true;
+      n.indeterminate = false;
+      nodes.set(id, { ...n });
+      nodes = new Map(nodes);
+      clientLog('apis_panel_picker', { action: 'toggle_node', id, checked: n.checked, before, after: countTreeItems() });
+      return;
+    }
     n.checked = !n.checked;
     n.indeterminate = false;
     // cascade to children if loaded
