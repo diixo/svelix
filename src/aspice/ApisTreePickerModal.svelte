@@ -345,8 +345,9 @@
                 node={nodes.get(cid)}
                 nodes={nodes}
                 getNode={(i) => nodes.get(i)}
-                onToggle={toggleNode}
-                onExpand={expandNode}
+                toggleNode={toggleNode}
+                expandNode={expandNode}
+                setFocus={setFocus}
               />
             {/each}
           {:else}
