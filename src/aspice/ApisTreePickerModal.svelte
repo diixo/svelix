@@ -1,15 +1,22 @@
 <script>
+
   import { createEventDispatcher } from 'svelte';
   import { tick } from 'svelte';
+
+  import TreeNode from './TreeNode.svelte';
+  import { clientLog } from '../lib/utils/clientLog.js';
+
+  import * as bootstrap from 'bootstrap';
 
   export let space = '';
   export let initialSelected = [];
   export let requiredIds = [];
 
-  import TreeNode from './TreeNode.svelte';
-  import { clientLog } from '../lib/utils/clientLog.js';
+
   const dispatch = createEventDispatcher();
-  let dialogEl;
+
+  let modalInstance; // bootstrap.Modal instance
+  let modalEl;       // DOM element <div id="pickerModal">
 
   // Node state: id -> { id, title, expanded, loading, loaded, checked, indeterminate, children: string[] }
   let nodes = new Map();
@@ -24,16 +31,32 @@
 
   function countTreeItems() {
     try {
-      if (!dialogEl) return 0;
-      return dialogEl.querySelectorAll('[role="treeitem"]').length;
+      if (!modalEl) return 0;
+      return modalEl.querySelectorAll('[role="treeitem"]').length;
     } catch {
       return 0;
     }
   }
 
-  function close() {
-    try { dialogEl?.close(); } catch {}
+  function initModal() {
+    if (!modalInstance) {
+      modalInstance = new bootstrap.Modal(modalEl, {
+        backdrop: 'static',
+        keyboard: false,
+      });
+    }
   }
+
+  function showModal() {
+    initModal();
+    modalInstance?.show();
+  }
+
+  function closeModal() {
+    clientLog('apis_panel_picker: close_modal', {});
+    modalInstance?.hide();
+  }
+
 
   function resetState() {
     nodes = new Map();
@@ -47,7 +70,7 @@
   export async function show() {
     resetState();
     await loadRoot();
-    clientLog('apis_panel_picker', { action: 'open_modal', space });
+    clientLog('apis_panel_picker: open_modal', { action: 'open_modal', space });
     // Load previously saved selection for preview
     try {
       const selRes = await fetch(`http://127.0.0.1:8001/confluence/selection?space=${encodeURIComponent(space)}`);
@@ -56,7 +79,7 @@
       clientLog('apis_panel_picker', { action: 'loaded_saved_selection', count: savedIds.length });
     } catch {}
     try {
-      dialogEl.showModal();
+      showModal();
     }
     catch (e) {
       errorMsg = e?.message || String(e || 'modal unknown error');
@@ -269,7 +292,8 @@
   }
 </script>
 
-<div class="modal fade" tabindex="-1" bind:this={dialogEl}>
+
+<div class="modal fade" tabindex="-1" bind:this={modalEl}>
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
 
@@ -291,24 +315,24 @@
 
         <!-- TREE AREA -->
         <!--
-        <div class="border p-2 bg-light"
-             style="max-height: 40vh; overflow-y: auto;"
-             role="tree"
-             aria-multiselectable="true">
+        <div class="border p-2 bg-light" style="max-height: 40vh; overflow-y: auto;" role="tree" aria-multiselectable="true">
 
           {#if rootChildren.length}
             {#each rootChildren as cid}
-              <TreeNode id={cid}
-                        depth={0}
-                        node={nodes.get(cid)}
-                        expandNode={expandNode}
-                        toggleNode={toggleNode}
-                        getNode={(i)=>nodes.get(i)}
-                        {setFocus} />
+              <TreeNode
+                id={cid}
+                depth={0}
+                node={nodes.get(cid)}
+                expandNode={expandNode}
+                toggleNode={toggleNode}
+                getNode={(i)=>nodes.get(i)}
+                {setFocus}
+              />
             {/each}
           {:else}
             <div class="small text-muted">No children under space home.</div>
           {/if}
+
         </div>
         -->
 
@@ -329,18 +353,18 @@
 
       </div>
 
+      <div class="modal-body">Tree Modal</div>
       <div class="modal-footer">
-        <button class="btn btn-secondary" on:click={close}>Cancel</button>
         <button class="btn btn-primary" on:click={onSave}>Save</button>
+        <button class="btn btn-secondary" on:click={closeModal}>Cancel</button>
       </div>
-
     </div>
   </div>
 </div>
 
-
 <!-- removed inline macro; using TreeNode component -->
-
+<!--
 <style>
   :global(.modal .modal-box) { padding-top: 1rem; }
 </style>
+-->

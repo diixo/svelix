@@ -93,7 +93,7 @@
   }
 
   async function openTree() {
-    clientLog('apis_panel_picker', { action: 'open', space });
+    clientLog('apis_panel_picker: openTree(modal)', { action: 'open', space });
     await pickerRef?.show();
   }
 
