@@ -1,24 +1,4 @@
 
-<style>
-  .tree-node { cursor: pointer; user-select: none; }
-  .node-children {
-    margin-left: 1.5rem;
-    list-style: none;
-    padding-left: 0;
-  }
-  .collapse-icon {
-    width: 1.125rem;
-    display:inline-block;
-    text-align:center;
-    cursor:pointer;
-  }
-  .node-label { margin-left: .25rem; }
-  .selected-count { min-width: 6rem; }
-  .search-highlight { background: rgb(255, 144, 64); }
-  .tree-node-item { margin-bottom: 0.25rem; }
-</style>
-
-
 <script>
   import { onMount, onDestroy } from 'svelte';
   import { patTest, patSave, getPat, treeBySpace, resolveRoot, selection, evaluate, pull, build, activate, getStatus } from './aspice/confluenceApi.js';
