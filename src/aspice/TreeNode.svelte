@@ -1,15 +1,13 @@
 <script>
   export let id;
   export let node = { title: id, children: [] };
-  export let nodes; // объект или Map с доступом nodes[id]
-  export let getNode = (nid) => nodes[nid] || { title: nid, children: [] };
+  export let getNode;// = (nid) => nodes[nid] || { title: nid, children: [] };
 
   // колбэки от родителя:
   export let expandNode = (id) => {};
   export let toggleNode = (id) => {};
   export let setFocus = () => {};
 
-  $: hasChildren = Array.isArray(node.children) && node.children.length > 0;
 </script>
 
 <li class="tree-node-item">
@@ -25,12 +23,13 @@
     data-title={node.title}
   >
     <!-- collapse icon -->
-    <span
-      class="collapse-icon"
-      on:click={() => hasChildren && expandNode(id)}
-    >
-      {#if hasChildren}
-        {node.expanded ? '▾' : '▸'}
+    <span class="collapse-icon" on:click={() => expandNode(id)} disabled={node.loading} >
+      {#if node.loading}
+        …
+      {:else}
+        {#if node.children?.length > 0}
+          {node.expanded ? '▾' : '▸'}
+        {/if}
       {/if}
     </span>
 
@@ -51,13 +50,12 @@
     </label>
   </div>
 
-  {#if hasChildren && node.expanded}
+  {#if node.expanded}
     <ul class="node-children">
-      {#each node.children as childId}
+      {#each (node.children || []) as childId}
         <svelte:self
           id={childId}
           node={getNode(childId)}
-          nodes={nodes}
           {getNode}
           {expandNode}
           {toggleNode}

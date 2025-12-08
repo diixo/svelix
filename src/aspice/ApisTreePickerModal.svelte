@@ -84,15 +84,11 @@
     } catch {}
     try {
       showModal();
-    }
-    catch (e) {
+    } catch (e) {
       errorMsg = e?.message || String(e || 'modal unknown error');
       clientLog('apis_panel_picker', { action: 'load_modal_error', error: errorMsg });
     }
-    try {
-      await tick();
-      clientLog('apis_panel_picker', { action: 'treeitem_count_initial', count: countTreeItems() });
-    } catch {}
+    try { await tick(); clientLog('apis_panel_picker', { action: 'treeitem_count_initial', count: countTreeItems() }); } catch {}
     try {
       // E2E helpers
       window.__expandFirstConfluenceNode = async () => {
@@ -175,10 +171,12 @@
     const before = countTreeItems();
     clientLog('apis_panel_picker', { action: 'expand_click', id, before });
     if (n.loaded) {
-      n.expanded = !n.expanded; nodes.set(id, { ...n }); nodes = new Map(nodes);
+      n.expanded = !n.expanded;
+      nodes.set(id, { ...n });
+      nodes = new Map(nodes);
       try { await tick(); } catch {}
       const after = countTreeItems();
-      clientLog('apis_panel_picker', { action: 'expand_node_toggle_loaded', id, expanded: n.expanded, before, after, delta: after - before });
+      clientLog('apis_panel_picker!', { action: 'expand_node_toggle_loaded', id, expanded: n.expanded, before, after, delta: after - before });
       return;
     }
     n.loading = true; nodes.set(id, { ...n }); nodes = new Map(nodes);
@@ -343,7 +341,6 @@
               <TreeNode
                 id={cid}
                 node={nodes.get(cid)}
-                nodes={nodes}
                 getNode={(i) => nodes.get(i)}
                 toggleNode={toggleNode}
                 expandNode={expandNode}
@@ -363,7 +360,14 @@
 
           {#if focusedId}
             <div class="small">
-              <b>{nodes.get(focusedId)?.title}</b> — Page ID: {focusedId}
+              <b>{nodes.get(focusedId)?.title}</b> — Page ID: {focusedId},
+              loading: {nodes.get(focusedId)?.loading ? 'yes' : 'no'},
+              loaded: {nodes.get(focusedId)?.loaded ? 'yes' : 'no'},
+              expanded: {nodes.get(focusedId)?.expanded ? 'yes' : 'no'}
+
+              {#if nodes.get(focusedId)?.loaded}
+                , childrens: {nodes.get(focusedId)?.children?.length || 0}
+              {/if}
             </div>
           {:else}
             <div class="small text-muted">
