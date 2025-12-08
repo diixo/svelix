@@ -304,6 +304,12 @@
     nodes = new Map(nodes);
     clientLog('apis_panel_picker', { action: 'apply_install_type', installType });
   }
+
+  function getNode(id)
+  {
+    return nodes.get(id);
+  }
+
 </script>
 
 
@@ -336,7 +342,7 @@
               <TreeNode
                 id={cid}
                 node={nodes.get(cid)}
-                getNode={(i) => nodes.get(i)}
+                getNode={getNode}
                 toggleNode={toggleNode}
                 expandNode={expandNode}
                 setFocus={setFocus}
