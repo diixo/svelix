@@ -222,9 +222,9 @@
 </script>
 
 <nav class="d-flex gap-2 p-5">
-  <button class="btn btn-light" on:click={() => page = 'home'}>Main</button>
-  <button class="btn btn-light" on:click={() => page = 'about'}>About-section</button>
-  <button class="btn btn-primary" data-testid="choose-pages-btn" on:click={openTree} disabled={!space}>Choose Pages…</button>
+  <button class="btn btn-gray px-4" on:click={() => page = 'home'}>Main</button>
+  <button class="btn btn-gray px-4" on:click={() => page = 'about'}>About-section</button>
+  <button class="btn btn-primary px-4" data-testid="choose-pages-btn" on:click={openTree} disabled={!space}>Choose Pages…</button>
 </nav>
 
 <ApisTreePickerModal bind:this={pickerRef} {space} initialSelected={Array.from(selectedIds)} on:save={(e) => {

@@ -357,7 +357,7 @@
 
         <!-- DESCRIPTION AREA -->
         <div class="border p-2 bg-light mt-3" style="min-height: 6rem;">
-          <div class="text-primary small fw-bold mb-1">Description</div>
+          <div class="text-primary fw-bold mb-1">Description</div>
 
           {#if focusedId}
             <div class="small">
@@ -383,8 +383,8 @@
       <div class="modal-body">Tree Modal</div>
       -->
       <div class="modal-footer">
-        <button class="btn btn-primary" on:click={onSave}>Save</button>
-        <button class="btn btn-secondary" on:click={closeModal}>Cancel</button>
+        <button class="btn btn-primary px-4" on:click={onSave}>Save</button>
+        <button class="btn btn-secondary px-4" on:click={closeModal}>Cancel</button>
       </div>
     </div>
   </div>
