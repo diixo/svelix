@@ -1,11 +1,11 @@
 <script>
   export let id;
-  export let node = { title: id, children: [] };
-  export let getNode;// = (nid) => nodes[nid] || { title: nid, children: [] };
+  export let node;
+  export let getNode;
 
   // колбэки от родителя:
-  export let expandNode = (id) => {};
-  export let toggleNode = (id) => {};
+  export let expandNode;
+  export let toggleNode;
   export let setFocus = () => {};
 
 </script>
@@ -23,7 +23,7 @@
     data-title={node.title}
   >
     <!-- collapse icon -->
-    <span class="collapse-icon" on:click={() => expandNode(id)} disabled={node.loading} >
+    <span class="collapse-icon" on:click={() => !node.loading && expandNode(id)} >
       {#if node.loading}
         …
       {:else}

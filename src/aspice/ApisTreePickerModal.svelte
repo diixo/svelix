@@ -51,11 +51,6 @@
     }
   }
 
-  function showModal() {
-    initModal();
-    modalInstance?.show();
-  }
-
   function closeModal() {
     clientLog('apis_panel_picker: close_modal', {});
     modalInstance?.hide();
@@ -82,12 +77,12 @@
       savedIds = Array.isArray(sel?.include_ids) ? sel.include_ids : [];
       clientLog('apis_panel_picker', { action: 'loaded_saved_selection', count: savedIds.length });
     } catch {}
+
     try {
-      showModal();
-    } catch (e) {
-      errorMsg = e?.message || String(e || 'modal unknown error');
-      clientLog('apis_panel_picker', { action: 'load_modal_error', error: errorMsg });
-    }
+      initModal();
+      modalInstance?.show();
+    } catch {}
+
     try { await tick(); clientLog('apis_panel_picker', { action: 'treeitem_count_initial', count: countTreeItems() }); } catch {}
     try {
       // E2E helpers
@@ -100,7 +95,7 @@
   }
 
 
-  export async function loadRoot() {
+  async function loadRoot() {
     errorMsg = '';
     try {
       // Try full cached tree first
@@ -374,8 +369,8 @@
               Position your mouse over a component to see its description.
             </div>
           {/if}
-        </div>
 
+        </div>
       </div>
 
       <!--
